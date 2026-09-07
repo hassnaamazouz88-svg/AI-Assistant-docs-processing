@@ -15,6 +15,12 @@ class Config:
         self.DB_NAME = os.getenv("DB_NAME", None)
         
         self.PENNYOCR_API_KEY = os.getenv("PENNYOCR_API_KEY", None)
+        
+        self.OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", None)
+        self.OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", None)
+        
+
+
 
 
 # Une seule instance, créée une fois, au niveau du module (pas indentée dans la classe)

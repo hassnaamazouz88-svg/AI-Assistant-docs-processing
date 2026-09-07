@@ -2,9 +2,7 @@ import re
 from transformers import AutoTokenizer
 
 
-# ============================================================
 # Configuration
-# ============================================================
 
 MODEL_NAME = "LiquidAI/LFM2.5-Embedding-350M"
 
@@ -12,7 +10,6 @@ MAX_TOKENS = 400       # marge de sécurité sous la limite de 512 tokens
 OVERLAP_TOKENS = 60    # chevauchement entre chunks
 
 
-# ============================================================
 # Tokenizer LFM2.5
 # ============================================================
 
@@ -24,10 +21,7 @@ _tokenizer = AutoTokenizer.from_pretrained(
 )
 
 
-# ============================================================
 # Comptage des tokens
-# ============================================================
-
 def count_tokens(text: str) -> int:
     """
     Compte le nombre de tokens en utilisant le tokenizer
@@ -44,10 +38,7 @@ def count_tokens(text: str) -> int:
     )
 
 
-# ============================================================
 # Niveau 1 : découpage structurel
-# ============================================================
-
 def split_into_sections(text: str) -> list[str]:
     """
     Niveau 1 :
@@ -73,10 +64,7 @@ def split_into_sections(text: str) -> list[str]:
     ]
 
 
-# ============================================================
 # Niveau 2 : découpage récursif
-# ============================================================
-
 def split_recursive(
     text: str,
     max_tokens: int = MAX_TOKENS
@@ -250,10 +238,7 @@ def add_overlap(
     return resultat
 
 
-# ============================================================
 # Point d'entrée principal
-# ============================================================
-
 def chunk_text(
     text: str,
     max_tokens: int = MAX_TOKENS,
