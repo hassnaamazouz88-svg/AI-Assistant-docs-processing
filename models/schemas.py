@@ -18,3 +18,14 @@ class DossierResponse(BaseModel):
     documents: list[DocumentResponse]
 
     model_config = ConfigDict(from_attributes=True)
+    
+    
+class ChatRequest(BaseModel):
+    question: str
+    conversation_id: UUID | None = None
+
+
+class ChatResponse(BaseModel):
+    conversation_id: UUID
+    answer: str
+    sources: list[dict]

@@ -78,6 +78,12 @@ class Message(Base):
     role: Mapped[str] = mapped_column(String(50), nullable=False)
     contenu: Mapped[str] = mapped_column(Text, nullable=False)
     sources_citees: Mapped[str] = mapped_column(Text, nullable=True)
+    
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        server_default=func.now(),
+        nullable=False
+    )
 
     conversation: Mapped["Conversation"] = relationship(back_populates="messages")
 
