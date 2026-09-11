@@ -29,3 +29,8 @@ class ChatResponse(BaseModel):
     conversation_id: UUID
     answer: str
     sources: list[dict]
+    
+    
+class GenerationRequest(BaseModel):
+    demande: str
+    format: str = "docx"

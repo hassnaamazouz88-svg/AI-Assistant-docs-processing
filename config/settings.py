@@ -17,7 +17,7 @@ class Config:
         self.PENNYOCR_API_KEY = os.getenv("PENNYOCR_API_KEY", None)
         
         self.OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", None)
-        self.OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", None)
+        self.OPENROUTER_MODELS = os.getenv("OPENROUTER_MODELS", "").split(",")
         
 
 

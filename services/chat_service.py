@@ -10,7 +10,7 @@ from core.llm.openrouter_provider import OpenRouterProvider
 class ChatService:
     def __init__(self):
         self.llm = OpenRouterProvider(
-            model=settings.OPENROUTER_MODEL,
+            model=settings.OPENROUTER_MODELS,  # liste, plus une seule chaîne
             api_key=settings.OPENROUTER_API_KEY
         )
 
