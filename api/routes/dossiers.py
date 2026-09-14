@@ -9,10 +9,11 @@ from services import dossier_service
 from services import ingestion_service
 from services import generation_service
 from services.chat_service import ChatService
-from repositories import dossier_repository
+from repositories import document_repository, dossier_repository
 from repositories import conversation_repository
 from repositories import fichier_genere_repository
 from core.generation.pdf_generator import get_or_create_preview_pdf
+from tasks.ingestion_tasks import ingest_dossier_task
 
 
 router = APIRouter(
@@ -42,13 +43,39 @@ def ingerer_dossier(
     db: Session = Depends(get_db)
 ):
     dossier = dossier_repository.get_by_id(db, dossier_id)
-
     if dossier is None:
         raise HTTPException(status_code=404, detail="Dossier introuvable")
 
-    resultat = ingestion_service.ingest_dossier(db, dossier_id)
+    task = ingest_dossier_task.delay(str(dossier_id))
 
-    return resultat
+    dossier_repository.update_statut(db, dossier_id, "en_cours")
+    db.commit()
+
+    return {
+        "message": "Ingestion lancée en arrière-plan",
+        "task_id": task.id,
+        "dossier_id": str(dossier_id)
+    }
+
+
+@router.get("/{dossier_id}/statut")
+def statut_dossier(
+    dossier_id: uuid.UUID,
+    db: Session = Depends(get_db)
+):
+    dossier = dossier_repository.get_by_id(db, dossier_id)
+    if dossier is None:
+        raise HTTPException(status_code=404, detail="Dossier introuvable")
+
+    documents = document_repository.get_by_dossier_id(db, dossier_id)
+
+    return {
+        "statut": dossier.statut,
+        "documents": [
+            {"nom_fichier": d.nom_fichier, "statut": d.statut_traitement}
+            for d in documents
+        ]
+    }
 
 
 @router.post("/{dossier_id}/chat", response_model=ChatResponse)

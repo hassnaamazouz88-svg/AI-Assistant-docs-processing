@@ -19,9 +19,8 @@ class Config:
         self.OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", None)
         self.OPENROUTER_MODELS = os.getenv("OPENROUTER_MODELS", "").split(",")
         
-
-
-
+        self.REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+        
 
 # Une seule instance, créée une fois, au niveau du module (pas indentée dans la classe)
 settings = Config()
