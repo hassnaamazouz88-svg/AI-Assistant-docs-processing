@@ -1,0 +1,383 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+  /* Palette violette fournie par l'utilisateur : du presque-noir au
+     rose pastel — utilisée pour les accents (aurora) dans les deux
+     thèmes ; les fonds et le texte sont ajustés séparément par thème
+     plus bas pour garder un bon contraste. */
+  --aurora-1: #3c215d;
+  --aurora-2: #7d498c;
+  --aurora-3: #d799c5;
+  --aurora-4: #1a0f3c;
+
+  --bg-0: #0b0c10;
+  --bg-1: #101218;
+
+  /* Liquid-glass tokens, named after the dashersw/liquid-glass-js parameters
+     (tintOpacity, blurRadius, rimIntensity) so the same vocabulary maps
+     straight onto the CSS implementation below. */
+  --glass-tint-opacity: 0.14;
+  --glass-blur: 22px;
+  --glass-rim: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.65);
+
+  /* Semantic text tokens — every component should read these instead of
+     hardcoding text-white/* so contrast stays correct in BOTH themes.
+     Dark theme: light text on a dark background. */
+  --text-1: rgba(255, 255, 255, 0.95); /* primary content */
+  --text-2: rgba(255, 255, 255, 0.72); /* secondary / labels */
+  --text-3: rgba(255, 255, 255, 0.48); /* muted / hints */
+  --border-soft: rgba(255, 255, 255, 0.12);
+  --chip-bg: rgba(255, 255, 255, 0.08);
+  --bar-bg: rgba(12, 13, 18, 0.78); /* opaque-enough bar so scrolled content never shows through */
+}
+
+/* Light theme: dark text on a light background — this is the block that
+   was previously missing, which made text-white/* classes nearly
+   invisible once the light theme was selected. */
+html:not(.dark) {
+  --text-1: rgba(26, 15, 60, 0.92);
+  --text-2: rgba(26, 15, 60, 0.68);
+  --text-3: rgba(26, 15, 60, 0.45);
+  --border-soft: rgba(26, 15, 60, 0.10);
+  --chip-bg: rgba(26, 15, 60, 0.06);
+  --bar-bg: rgba(253, 247, 251, 0.85);
+}
+
+html.dark {
+  color-scheme: dark;
+  /* Palette violette fournie par l'utilisateur. */
+  --bg-0: #040214;
+  --bg-1: #1a0f3c;
+  --aurora-1: #3c215d;
+  --aurora-2: #7d498c;
+  --aurora-3: #d799c5;
+  --aurora-4: #1a0f3c;
+  --text-1: rgba(248, 242, 250, 0.96);
+  --text-2: rgba(221, 205, 226, 0.72);
+  --text-3: rgba(190, 170, 200, 0.5);
+  --glass-tint-opacity: 0.16;
+  --glass-rim: rgba(255, 255, 255, 0.5);
+  --glass-border: rgba(215, 153, 197, 0.18);
+  --bar-bg: #1a0f3c;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-0);
+  color: rgba(248, 242, 250, 0.92);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Light theme overrides */
+html:not(.dark) body {
+  background: #faf5fb;
+  color: #1a0f3c;
+}
+
+html:not(.dark) {
+  --glass-tint-opacity: 0.55;
+  --glass-rim: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(20, 23, 43, 0.08);
+  --glass-shadow: 0 20px 45px -22px rgba(30, 30, 60, 0.35);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--aurora-1) 55%, transparent);
+}
+
+/* ---------- Scrollbars ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+
+/* ---------- Aurora background ---------- */
+.aurora-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--bg-0);
+}
+html:not(.dark) .aurora-bg {
+  background: #faf5fb;
+}
+.aurora-bg .blob {
+  position: absolute;
+  width: 55vmax;
+  height: 55vmax;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: 0.28;
+  mix-blend-mode: normal;
+  will-change: transform;
+}
+html:not(.dark) .aurora-bg .blob {
+  opacity: 0.18;
+  mix-blend-mode: normal;
+}
+.aurora-bg .blob-1 {
+  background: var(--aurora-1);
+  top: -15vmax;
+  left: -10vmax;
+  animation: drift-1 26s ease-in-out infinite alternate;
+}
+.aurora-bg .blob-2 {
+  background: var(--aurora-2);
+  bottom: -20vmax;
+  right: -10vmax;
+  animation: drift-2 32s ease-in-out infinite alternate;
+}
+.aurora-bg .blob-3 {
+  background: var(--aurora-3);
+  top: 30%;
+  right: 15%;
+  width: 38vmax;
+  height: 38vmax;
+  animation: drift-3 22s ease-in-out infinite alternate;
+}
+.aurora-bg .grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes drift-1 {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(8vmax, 10vmax) scale(1.15); }
+}
+@keyframes drift-2 {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(-6vmax, -8vmax) scale(1.1); }
+}
+@keyframes drift-3 {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(-10vmax, 6vmax) scale(0.9); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-bg .blob { animation: none; }
+}
+
+/* ---------- Liquid glass surfaces ---------- */
+.glass {
+  position: relative;
+  background:
+    linear-gradient(140deg,
+      color-mix(in srgb, white var(--glass-tint-opacity), transparent) 0%,
+      color-mix(in srgb, white calc(var(--glass-tint-opacity) * 0.35), transparent) 60%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 1px 0 var(--glass-rim),
+    inset 0 -1px 12px rgba(0, 0, 0, 0.08);
+  isolation: isolate;
+}
+
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 15% 0%, rgba(255, 255, 255, 0.35), transparent 55%);
+  mix-blend-mode: overlay;
+  opacity: 0.8;
+}
+
+/* Mode sombre : pas d'effet verre — cartes en couleur pleine, sans flou
+   ni reflet, plutôt que du glassmorphism translucide. */
+html.dark .glass {
+  background: var(--bg-1);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+html.dark .glass::before {
+  display: none;
+}
+
+.glass-rounded { border-radius: 1.5rem; }
+.glass-pill { border-radius: 999px; }
+.glass-circle { border-radius: 50%; }
+
+.glass-interactive {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.glass-interactive:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--aurora-2) 45%, var(--glass-border));
+  box-shadow:
+    0 24px 70px -20px rgba(0, 0, 0, 0.7),
+    0 0 0 1px color-mix(in srgb, var(--aurora-1) 25%, transparent),
+    inset 0 1px 0 var(--glass-rim);
+}
+.glass-interactive:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Bulle utilisateur : dégradé "verre" en mode clair (comme les autres
+   surfaces .glass), couleur pleine fixée par l'utilisateur en mode
+   sombre uniquement. La bulle assistant, elle, n'a plus besoin d'une
+   règle dédiée : elle garde simplement .glass, qui en mode sombre
+   résout déjà --bg-1 sur #1a0f3c. */
+.bubble-user {
+  background: linear-gradient(135deg, var(--aurora-1), color-mix(in srgb, var(--aurora-2) 70%, var(--aurora-1)));
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--aurora-1) 70%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+html.dark .bubble-user {
+  background: #7d498c;
+  box-shadow: 0 12px 30px -10px rgba(125, 73, 140, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.glass-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--aurora-1), color-mix(in srgb, var(--aurora-2) 70%, var(--aurora-1)));
+  box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--aurora-1) 70%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, filter 0.3s ease;
+}
+.glass-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+.glass-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+.glass-btn:disabled {
+  filter: grayscale(0.4);
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.glass-input {
+  background: color-mix(in srgb, white 6%, transparent);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+html:not(.dark) .glass-input {
+  background: color-mix(in srgb, white 70%, transparent);
+}
+html.dark .glass-input {
+  background: color-mix(in srgb, var(--bg-0) 60%, black);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+html.dark .glass-input:focus {
+  background: color-mix(in srgb, var(--bg-0) 40%, black);
+}
+.glass-input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--aurora-2) 55%, var(--glass-border));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--aurora-2) 18%, transparent);
+  background: color-mix(in srgb, white 10%, transparent);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, var(--aurora-2), var(--aurora-1) 60%, var(--aurora-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.14) 37%, rgba(255,255,255,0.05) 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.6s ease infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+.thinking-dot {
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---------- Semantic text/border utilities ---------- */
+.text-1 { color: var(--text-1); }
+.text-2 { color: var(--text-2); }
+.text-3 { color: var(--text-3); }
+.border-soft { border-color: var(--border-soft); }
+.chip {
+  background: var(--chip-bg);
+  color: var(--text-2);
+}
+
+/* Opaque bar (chat header / composer) — sits above the scrolling message
+   list, with a solid-enough backdrop so scrolled text is fully hidden
+   underneath it instead of bleeding through the translucent glass. */
+.bar-solid {
+  position: relative;
+  z-index: 10;
+  background: var(--bar-bg);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+/* Même rendu que .bar-solid, mais sans forcer position:relative — pour
+   la barre de saisie flottante, positionnée en absolute par-dessus la
+   liste de messages (voir ChatWindow), afin que le texte défile bien
+   derrière elle plutôt que de s'arrêter juste au-dessus. */
+.bar-floating {
+  z-index: 10;
+  background: var(--bar-bg);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+html.dark .bar-solid,
+html.dark .bar-floating {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}

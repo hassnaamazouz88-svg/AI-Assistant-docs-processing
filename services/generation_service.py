@@ -61,7 +61,8 @@ def generate_document(
         db=db,
         dossier_id=dossier_id,
         type_fichier=format,
-        chemin=chemin_final
+        chemin=chemin_final,
+        titre=plan["titre"]
     )
     db.commit()
 

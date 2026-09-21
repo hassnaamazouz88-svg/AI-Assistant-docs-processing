@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 import os
 from config.database import get_db
-from models.schemas import DossierResponse, ChatRequest, ChatResponse, GenerationRequest
+from models.schemas import DossierResponse, ChatRequest, ChatResponse, GenerationRequest, ConversationResponse, FichierGenereResponse
 from services import dossier_service
 from services import ingestion_service
 from services import generation_service
@@ -56,6 +56,22 @@ def ingerer_dossier(
         "task_id": task.id,
         "dossier_id": str(dossier_id)
     }
+
+@router.get("/", response_model=list[DossierResponse])
+def lister_dossiers(db: Session = Depends(get_db)):
+    return dossier_repository.get_all(db)
+
+
+@router.get("/{dossier_id}", response_model=DossierResponse)
+def obtenir_dossier(
+    dossier_id: uuid.UUID,
+    db: Session = Depends(get_db)
+):
+    dossier = dossier_repository.get_by_id(db, dossier_id)
+    if dossier is None:
+        raise HTTPException(status_code=404, detail="Dossier introuvable")
+
+    return dossier
 
 
 @router.get("/{dossier_id}/statut")
@@ -185,6 +201,20 @@ def generer_document(
     if dossier is None:
         raise HTTPException(status_code=404, detail="Dossier introuvable")
 
+    # Rattacher la génération à une conversation (comme pour /chat) afin
+    # que la demande et la confirmation restent visibles dans l'historique
+    # après un rechargement de la page — sans ça, ces échanges n'étaient
+    # gardés qu'en mémoire côté frontend et disparaissaient en quittant
+    # le chat.
+    if request.conversation_id is not None:
+        conversation = conversation_repository.get_conversation(db, request.conversation_id)
+        if conversation is None:
+            raise HTTPException(status_code=404, detail="Conversation introuvable")
+        if conversation.dossier_id != dossier_id:
+            raise HTTPException(status_code=400, detail="La conversation n'appartient pas à ce dossier")
+    else:
+        conversation = conversation_repository.create_conversation(db=db, dossier_id=dossier_id)
+
     resultat = generation_service.generate_document(
         db=db,
         dossier_id=dossier_id,
@@ -192,11 +222,38 @@ def generer_document(
         format=request.format
     )
 
+    conversation_repository.add_message(
+        db=db,
+        conversation_id=conversation.id,
+        role="user",
+        contenu=request.demande
+    )
+    conversation_repository.add_message(
+        db=db,
+        conversation_id=conversation.id,
+        role="assistant",
+        contenu=f"📄 Document généré : {resultat['titre']}"
+    )
+    db.commit()
+
     return {
         "fichier_id": str(resultat["fichier_id"]),
         "titre": resultat["titre"],
+        "conversation_id": str(conversation.id),
         "download_url": f"/dossiers/fichiers-generes/{resultat['fichier_id']}/download"
     }
+
+
+@router.get("/{dossier_id}/fichiers-generes", response_model=list[FichierGenereResponse])
+def lister_fichiers_generes(
+    dossier_id: uuid.UUID,
+    db: Session = Depends(get_db)
+):
+    dossier = dossier_repository.get_by_id(db, dossier_id)
+    if dossier is None:
+        raise HTTPException(status_code=404, detail="Dossier introuvable")
+
+    return fichier_genere_repository.get_by_dossier_id(db, dossier_id)
 
 
 @router.get("/fichiers-generes/{fichier_id}/download")
@@ -240,3 +297,11 @@ def previsualiser_fichier_genere(
         media_type="application/pdf",
         headers={"Content-Disposition": "inline; filename=apercu.pdf"}
     )
+    
+@router.get("/{dossier_id}/conversations", response_model=list[ConversationResponse])
+def lister_conversations(dossier_id: uuid.UUID, db: Session = Depends(get_db)):
+    return conversation_repository.get_conversations_by_dossier(db, dossier_id)
+
+@router.get("/conversations/{conversation_id}/messages")
+def historique_conversation(conversation_id: uuid.UUID, db: Session = Depends(get_db)):
+    return conversation_repository.get_conversation_history(db, conversation_id)

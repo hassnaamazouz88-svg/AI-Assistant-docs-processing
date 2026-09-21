@@ -31,6 +31,10 @@ def get_by_id(db: Session, dossier_id: uuid.UUID) -> Dossier | None:
     """
     return db.query(Dossier).filter(Dossier.id == dossier_id).first()
 
+def get_all(db: Session) -> list[Dossier]:
+    """Liste tous les dossiers."""
+    return db.query(Dossier).order_by(Dossier.created_at.desc()).all()
+
 
 def update_statut(
     db: Session,

@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Any
 
 from openpyxl import Workbook
-from openpyxl.styles import Font, Alignment
+from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
 
 
 def generate_xlsx(
@@ -86,6 +86,10 @@ def generate_xlsx(
     worksheet["A3"].font = Font(bold=True)
     worksheet["B3"].font = Font(bold=True)
 
+    entete_fill = PatternFill(start_color="E8E8EC", end_color="E8E8EC", fill_type="solid")
+    worksheet["A3"].fill = entete_fill
+    worksheet["B3"].fill = entete_fill
+
     # Ajouter les sections
     row = 4
 
@@ -113,13 +117,17 @@ def generate_xlsx(
         worksheet.cell(row=row,column=1,value=section_title)
 
         worksheet.cell(row=row,column=2,value=section_content)
-        
-        # Ajout : hauteur de ligne explicite pour éviter le glitch visuel
-        worksheet.row_dimensions[row].height = 60
 
         row += 1
 
     # Mise en forme
+    bordure = Border(
+        left=Side(style="thin", color="B0B0B0"),
+        right=Side(style="thin", color="B0B0B0"),
+        top=Side(style="thin", color="B0B0B0"),
+        bottom=Side(style="thin", color="B0B0B0")
+    )
+
     for current_row in worksheet.iter_rows(
         min_row=3,
         max_row=row - 1,
@@ -131,10 +139,25 @@ def generate_xlsx(
                 vertical="top",
                 wrap_text=True
             )
+            # Sans bordure, l'aperçu PDF (converti via LibreOffice) ne
+            # ressemble à rien d'autre qu'à du texte brut — les traits
+            # de cellule sont ce qui donne visuellement l'apparence
+            # d'un tableau une fois converti.
+            cell.border = bordure
 
     # Largeur des colonnes
     worksheet.column_dimensions["A"].width = 30
-    worksheet.column_dimensions["B"].width = 100
+    worksheet.column_dimensions["B"].width = 70
+
+    # Mise en page pour l'impression / la conversion PDF : sans ces
+    # réglages, la colonne B (large) ne tient pas en largeur de page et
+    # LibreOffice imprime "Section" sur une page puis "Contenu" sur la
+    # suivante, ce qui donne l'impression que ce n'est pas un tableau.
+    worksheet.page_setup.orientation = "landscape"
+    worksheet.page_setup.fitToWidth = 1
+    worksheet.page_setup.fitToHeight = 0
+    worksheet.sheet_properties.pageSetUpPr.fitToPage = True
+    worksheet.print_area = f"A1:B{row - 1}"
 
     # Figer les en-têtes
     worksheet.freeze_panes = "A4"

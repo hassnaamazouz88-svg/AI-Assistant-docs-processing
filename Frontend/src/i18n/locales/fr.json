@@ -1,0 +1,83 @@
+{
+  "app": {
+    "title": "Assistant IA",
+    "subtitle": "Appels d'offres"
+  },
+  "nav": {
+    "dossiers": "Dossiers",
+    "newDossier": "Nouveau dossier"
+  },
+  "dossiers": {
+    "list": "Mes dossiers",
+    "listSubtitle": "Retrouvez et interrogez tous vos dossiers d'appels d'offres.",
+    "loading": "Chargement des dossiers...",
+    "empty": "Aucun dossier pour le moment",
+    "emptyHint": "Créez votre premier dossier pour commencer à discuter avec vos documents.",
+    "documentsCount_one": "{{count}} document",
+    "documentsCount_other": "{{count}} documents",
+    "relaunch": "Relancer",
+    "relaunchError": "Impossible de relancer l'ingestion : {{message}}",
+    "openChat": "Ouvrir la discussion",
+    "statuses": {
+      "en_attente": "En attente",
+      "en_cours": "En cours",
+      "pret": "Prêt",
+      "echec": "Échec"
+    },
+    "relaunching": "Relance...",
+    "relaunchHint": "L'ingestion a échoué, cliquez pour réessayer"
+  },
+  "upload": {
+    "title": "Nouveau dossier",
+    "subtitle": "Importez les pièces de votre appel d'offres pour lancer l'analyse.",
+    "name": "Nom du dossier",
+    "namePlaceholder": "Ex : AO Fournitures Meknès",
+    "files": "Fichiers du dossier",
+    "filesHint": "PDF, Word, Excel ou archive ZIP",
+    "filesSelected_one": "{{count}} fichier sélectionné",
+    "filesSelected_other": "{{count}} fichiers sélectionnés",
+    "dropHint": "Glissez vos fichiers ici ou cliquez pour parcourir",
+    "submit": "Uploader le dossier",
+    "submitting": "Envoi en cours...",
+    "validationError": "Merci de remplir le nom et de sélectionner au moins un fichier",
+    "back": "Retour aux dossiers"
+  },
+  "chat": {
+    "send": "Envoyer",
+    "placeholder": "Posez une question sur ce dossier...",
+    "thinking": "L'assistant réfléchit",
+    "historyLoading": "Chargement de la conversation...",
+    "emptyState": "Commencez la conversation en posant une question sur ce dossier.",
+    "back": "Retour aux dossiers",
+    "sources": "Sources",
+    "toggleFiles": "Fichiers",
+    "toggleGenerated": "Générés",
+    "fileGenerated": "📄 Document généré : {{titre}} — consultez-le à droite de la discussion."
+  },
+  "common": {
+    "language": "Langue",
+    "close": "Fermer"
+  },
+  "files": {
+    "title": "Fichiers sources",
+    "empty": "Aucun fichier",
+    "statuses": {
+      "en_attente": "En attente",
+      "traite": "Traité",
+      "echec": "Échec"
+    }
+  },
+  "generated": {
+    "title": "Documents générés",
+    "empty": "Aucun document généré pour l'instant",
+    "emptyHint": "Demandez un document à l'assistant dans la discussion pour le voir apparaître ici.",
+    "requestLabel": "Demande de génération",
+    "requestPlaceholder": "Ex : Génère l'acte d'engagement rempli",
+    "formatLabel": "Format",
+    "submit": "Générer",
+    "submitting": "Génération en cours...",
+    "download": "Télécharger",
+    "preview": "Aperçu",
+    "error": "Erreur lors de la génération : {{message}}"
+  }
+}

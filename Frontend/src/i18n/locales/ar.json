@@ -1,0 +1,83 @@
+{
+  "app": {
+    "title": "المساعد الذكي",
+    "subtitle": "طلبات العروض"
+  },
+  "nav": {
+    "dossiers": "الملفات",
+    "newDossier": "ملف جديد"
+  },
+  "dossiers": {
+    "list": "ملفاتي",
+    "listSubtitle": "تصفح جميع ملفات طلبات العروض وتحدث معها.",
+    "loading": "جارٍ تحميل الملفات...",
+    "empty": "لا توجد ملفات بعد",
+    "emptyHint": "أنشئ ملفك الأول لبدء التحدث مع مستنداتك.",
+    "documentsCount_one": "{{count}} مستند",
+    "documentsCount_other": "{{count}} مستندات",
+    "relaunch": "إعادة المحاولة",
+    "relaunchError": "تعذّرت إعادة تشغيل المعالجة: {{message}}",
+    "openChat": "فتح المحادثة",
+    "statuses": {
+      "en_attente": "في الانتظار",
+      "en_cours": "قيد المعالجة",
+      "pret": "جاهز",
+      "echec": "فشل"
+    },
+    "relaunching": "جارٍ إعادة التشغيل...",
+    "relaunchHint": "فشلت المعالجة، انقر لإعادة المحاولة"
+  },
+  "upload": {
+    "title": "ملف جديد",
+    "subtitle": "قم برفع مستندات طلب العرض لبدء التحليل.",
+    "name": "اسم الملف",
+    "namePlaceholder": "مثال: طلب توريدات مكناس",
+    "files": "ملفات الدوسيه",
+    "filesHint": "PDF أو Word أو Excel أو أرشيف ZIP",
+    "filesSelected_one": "تم اختيار {{count}} ملف",
+    "filesSelected_other": "تم اختيار {{count}} ملفات",
+    "dropHint": "اسحب ملفاتك هنا أو انقر للتصفح",
+    "submit": "رفع الملف",
+    "submitting": "جارٍ الرفع...",
+    "validationError": "يرجى إدخال الاسم واختيار ملف واحد على الأقل",
+    "back": "العودة إلى الملفات"
+  },
+  "chat": {
+    "send": "إرسال",
+    "placeholder": "اطرح سؤالاً حول هذا الملف...",
+    "thinking": "المساعد يفكر",
+    "historyLoading": "جارٍ تحميل المحادثة...",
+    "emptyState": "ابدأ المحادثة بطرح سؤال حول هذا الملف.",
+    "back": "العودة إلى الملفات",
+    "sources": "المصادر",
+    "toggleFiles": "الملفات",
+    "toggleGenerated": "المولّدة",
+    "fileGenerated": "📄 تم توليد المستند: {{titre}} — يمكنك الاطلاع عليه على يمين المحادثة."
+  },
+  "common": {
+    "language": "اللغة",
+    "close": "إغلاق"
+  },
+  "files": {
+    "title": "الملفات المصدر",
+    "empty": "لا توجد ملفات",
+    "statuses": {
+      "en_attente": "في الانتظار",
+      "traite": "تمت المعالجة",
+      "echec": "فشل"
+    }
+  },
+  "generated": {
+    "title": "المستندات المولّدة",
+    "empty": "لا يوجد مستند مولّد بعد",
+    "emptyHint": "اطلب مستنداً من المساعد داخل المحادثة ليظهر هنا.",
+    "requestLabel": "طلب التوليد",
+    "requestPlaceholder": "مثال: أنشئ نموذج الالتزام معبأً",
+    "formatLabel": "الصيغة",
+    "submit": "توليد",
+    "submitting": "جارٍ التوليد...",
+    "download": "تحميل",
+    "preview": "معاينة",
+    "error": "خطأ أثناء التوليد: {{message}}"
+  }
+}

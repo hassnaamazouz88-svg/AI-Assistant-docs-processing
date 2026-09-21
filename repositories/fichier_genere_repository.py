@@ -7,7 +7,8 @@ def create_fichier_genere(
     db: Session,
     dossier_id: uuid.UUID,
     type_fichier: str,
-    chemin: str
+    chemin: str,
+    titre: str | None = None
 ) -> FichierGenere:
     """
     Enregistre un fichier généré (résumé, synthèse...) en base.
@@ -15,7 +16,8 @@ def create_fichier_genere(
     fichier = FichierGenere(
         dossier_id=dossier_id,
         type_fichier=type_fichier,
-        chemin=chemin
+        chemin=chemin,
+        titre=titre
     )
     db.add(fichier)
     db.flush()
@@ -27,11 +29,13 @@ def get_by_dossier_id(
     dossier_id: uuid.UUID
 ) -> list[FichierGenere]:
     """
-    Liste tous les fichiers générés pour un dossier.
+    Liste tous les fichiers générés pour un dossier, du plus récent
+    au plus ancien.
     """
     return (
         db.query(FichierGenere)
         .filter(FichierGenere.dossier_id == dossier_id)
+        .order_by(FichierGenere.created_at.desc())
         .all()
     )
 

@@ -1,0 +1,83 @@
+{
+  "app": {
+    "title": "AI Assistant",
+    "subtitle": "Tender management"
+  },
+  "nav": {
+    "dossiers": "Dossiers",
+    "newDossier": "New dossier"
+  },
+  "dossiers": {
+    "list": "My dossiers",
+    "listSubtitle": "Browse and chat with all your tender dossiers.",
+    "loading": "Loading dossiers...",
+    "empty": "No dossiers yet",
+    "emptyHint": "Create your first dossier to start chatting with your documents.",
+    "documentsCount_one": "{{count}} document",
+    "documentsCount_other": "{{count}} documents",
+    "relaunch": "Retry",
+    "relaunchError": "Could not restart ingestion: {{message}}",
+    "openChat": "Open chat",
+    "statuses": {
+      "en_attente": "Pending",
+      "en_cours": "Processing",
+      "pret": "Ready",
+      "echec": "Failed"
+    },
+    "relaunching": "Restarting...",
+    "relaunchHint": "Ingestion failed, click to retry"
+  },
+  "upload": {
+    "title": "New dossier",
+    "subtitle": "Upload the documents of your tender to start the analysis.",
+    "name": "Dossier name",
+    "namePlaceholder": "E.g. Supplies tender Meknes",
+    "files": "Dossier files",
+    "filesHint": "PDF, Word, Excel or ZIP archive",
+    "filesSelected_one": "{{count}} file selected",
+    "filesSelected_other": "{{count}} files selected",
+    "dropHint": "Drag your files here or click to browse",
+    "submit": "Upload dossier",
+    "submitting": "Uploading...",
+    "validationError": "Please provide a name and select at least one file",
+    "back": "Back to dossiers"
+  },
+  "chat": {
+    "send": "Send",
+    "placeholder": "Ask a question about this dossier...",
+    "thinking": "The assistant is thinking",
+    "historyLoading": "Loading conversation...",
+    "emptyState": "Start the conversation by asking a question about this dossier.",
+    "back": "Back to dossiers",
+    "sources": "Sources",
+    "toggleFiles": "Files",
+    "toggleGenerated": "Generated",
+    "fileGenerated": "📄 Document generated: {{titre}} — see it to the right of the conversation."
+  },
+  "common": {
+    "language": "Language",
+    "close": "Close"
+  },
+  "files": {
+    "title": "Source files",
+    "empty": "No files",
+    "statuses": {
+      "en_attente": "Pending",
+      "traite": "Processed",
+      "echec": "Failed"
+    }
+  },
+  "generated": {
+    "title": "Generated documents",
+    "empty": "No generated document yet",
+    "emptyHint": "Ask the assistant for a document in the chat to see it appear here.",
+    "requestLabel": "Generation request",
+    "requestPlaceholder": "E.g. Generate the filled commitment form",
+    "formatLabel": "Format",
+    "submit": "Generate",
+    "submitting": "Generating...",
+    "download": "Download",
+    "preview": "Preview",
+    "error": "Generation error: {{message}}"
+  }
+}

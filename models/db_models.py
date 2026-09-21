@@ -99,5 +99,7 @@ class FichierGenere(Base):
     )
     type_fichier: Mapped[str] = mapped_column(String(50), nullable=True)
     chemin: Mapped[str] = mapped_column(String(500), nullable=True)
+    titre: Mapped[str] = mapped_column(String(255), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     dossier: Mapped["Dossier"] = relationship(back_populates="fichiers_generes")
