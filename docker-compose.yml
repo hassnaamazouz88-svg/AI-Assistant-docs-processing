@@ -1,0 +1,66 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: appel_offres_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redis_data:/data
+
+  backend:
+    build: .
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: postgres          # nom du service, pas "localhost"
+      DB_PORT: 5432
+      DB_NAME: appel_offres_db
+      REDIS_URL: redis://redis:6379/0   # idem, "redis" pas "localhost"
+      PENNYOCR_API_KEY: ${PENNYOCR_API_KEY}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      OPENROUTER_MODELS: ${OPENROUTER_MODELS}
+    volumes:
+      - ./storage:/app/storage
+    ports:
+      - "8000:8000"
+
+  worker:
+    build: .
+    command: celery -A tasks.celery_app worker --loglevel=info --concurrency=1
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: appel_offres_db
+      REDIS_URL: redis://redis:6379/0
+      PENNYOCR_API_KEY: ${PENNYOCR_API_KEY}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      OPENROUTER_MODELS: ${OPENROUTER_MODELS}
+    volumes:
+      - ./storage:/app/storage
+      
+  frontend:
+    build: ./Frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:

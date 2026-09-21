@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8000"
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
 
 export async function envoyerMessage(dossierId, question, conversationId = null) {
   const response = await fetch(`${API_URL}/dossiers/${dossierId}/chat`, {

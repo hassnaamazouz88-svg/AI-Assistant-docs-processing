@@ -1,5 +1,23 @@
+# Python
 .venv/
+venv/
+env/
 __pycache__/
-*.pyc
+*.py[cod]
+
+# Environment variables
 .env
+.env.*
+!.env.example
+
+# Editor
 .vscode/
+
+# Generated data
+storage/
+chroma_db/
+.chroma/
+
+# Logs
+logs/
+*.log
